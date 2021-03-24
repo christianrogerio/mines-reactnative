@@ -12,7 +12,7 @@ import {
 import params from './src/params';
 import Field from './src/components/Field'
 
-
+/* 11:08 video */
 export default class App extends Component {
   render(){
     return (
