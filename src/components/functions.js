@@ -1,6 +1,6 @@
-const creatBoard = (rows, cloumns)=>{
+const creatBoard = (rows, columns)=>{
   return Array(rows).fill(0).map( (_,row)=>{
-    return Array(cloumns).fill(0).map( (_column)=>{
+    return Array(columns).fill(0).map( (_,column)=>{
       return{
         row,column,
         opened:false,
