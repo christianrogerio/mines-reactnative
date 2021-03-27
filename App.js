@@ -13,7 +13,7 @@ import params from './src/params';
 import {createMineBoard} from './src/components/functions'
 import MineField from './src/components/MineField'
 
-/* 11:08 video */
+
 export default class App extends Component {
 
   constructor(props){
@@ -61,3 +61,5 @@ const styles = StyleSheet.create({
     backgroundColor:'#AAA'
   }
 });
+
+/* video 70 17:19 */
