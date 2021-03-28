@@ -7,10 +7,16 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View,
+  View, Alert
 } from 'react-native';
 import params from './src/params';
-import {createMineBoard} from './src/components/functions'
+import {createMinedBoard, 
+  cloneBoard,
+  openField,
+  hadExplosion,
+  wonGame,
+  showMines
+} from './src/components/functions'
 import MineField from './src/components/MineField'
 
 
@@ -24,16 +30,37 @@ export default class App extends Component {
   minesAmount=()=>{
     const cols=params.getColumnsAmount()
     const rows=params.getRowsAmount()
-    return Math.ceil(cols*rows*params.difficultLevevl)
+    return Math.ceil(cols*rows*params.difficultLevel)
   }
 
   createState=()=>{
     const cols=params.getColumnsAmount()
     const rows=params.getRowsAmount()
     const totalMinas=this.minesAmount()
+    console.log('Total Minas:'+totalMinas)
     return {
-      board: createMineBoard(rows, cols, totalMinas),
+      board: createMinedBoard(rows, cols, totalMinas),
+      won:false, lost:false,
     }
+  }
+
+  onOpenField=(row,column)=>{
+    //console.log(this.state.board)
+    const board=cloneBoard(this.state.board)
+    //console.log(board)
+    openField(board,row,column)
+    const lost = hadExplosion(board)
+    const won = wonGame(board)
+    if(lost){
+      showMines(board)
+      Alert.alert('Perdeeeeu!','Ai! Que buuuuuurro! Dá zero para ele.')
+    }
+    if(won){
+      console.log(board)
+      showMines(board)
+      Alert.alert('Parabéns!','Você venceu!')
+    }
+    this.setState({board,lost,won})
   }
 
   render(){
@@ -44,7 +71,7 @@ export default class App extends Component {
         {params.getColumnsAmount()}x{params.getColumnsAmount()}
         </Text>
         <View style={styles.board}>
-          <MineField board={this.state.board} ></MineField>
+          <MineField board={this.state.board} onOpenField={this.onOpenField} ></MineField>
         </View>        
       </View>
     )
@@ -62,4 +89,4 @@ const styles = StyleSheet.create({
   }
 });
 
-/* video 70 17:19 */
+/* video 74 9:27 */
