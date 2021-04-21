@@ -15,10 +15,13 @@ import {createMinedBoard,
   openField,
   hadExplosion,
   wonGame,
-  showMines
+  showMines,
+  invertFlag,
+  flagsUsed
 } from './src/components/functions'
 import MineField from './src/components/MineField'
-
+import Header from './src/components/Header'
+import LevelSelection from './src/components/Screens/LevelSelection'
 
 export default class App extends Component {
 
@@ -40,7 +43,7 @@ export default class App extends Component {
     console.log('Total Minas:'+totalMinas)
     return {
       board: createMinedBoard(rows, cols, totalMinas),
-      won:false, lost:false,
+      won:false, lost:false, showLevelSelection: false,
     }
   }
 
@@ -63,15 +66,32 @@ export default class App extends Component {
     this.setState({board,lost,won})
   }
 
+  onSelectField=(row,column)=>{
+    const board=cloneBoard(this.state.board)
+    invertFlag(board,row,column)
+    const won=wonGame(board)
+    if(won){
+      Alert.alert('Parabéns!','Você venceu!')
+    }
+    this.setState({board,won})
+  }
+
+  onLevelSelected = level => {
+    params.difficultLevel=level
+    this.setState(this.createState())
+  }
+
   render(){
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Iniciando o Mines</Text>
-        <Text style={styles.instructions}>Tamanho de grade:
-        {params.getColumnsAmount()}x{params.getColumnsAmount()}
-        </Text>
+        <LevelSelection isVisible={this.state.showLevelSelection} onLevelSelected={this.onLevelSelected} onCancel={()=> this.setState({ showLevelSelection: false})} onFlagPress={()=>this.setState({showLevelSelection:true})} />
+        <Header flagsLeft={this.minesAmount()-flagsUsed(this.state.board)}
+        onNewGame={()=>this.setState(this.createState())}
+        />
         <View style={styles.board}>
-          <MineField board={this.state.board} onOpenField={this.onOpenField} ></MineField>
+          <MineField board={this.state.board} onOpenField={this.onOpenField} 
+          onSelectField={this.onSelectField}
+          ></MineField>
         </View>        
       </View>
     )
@@ -89,4 +109,4 @@ const styles = StyleSheet.create({
   }
 });
 
-/* video 74 9:27 */
+/* video 77 */
